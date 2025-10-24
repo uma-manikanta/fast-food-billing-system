@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing - RGUKT Food Court</title>
+    
+    <link rel="stylesheet" href="css/admin_panel.css">
+    
+</head>
+<body>
+
+    <!-- Main Wrapper -->
+    <div class="pos-wrapper">
+
+        <!-- Navigation Bar (Top) -->
+        <header class="mobile-header">
+            <h1 class="header-title">Campus Bites</h1>
+            <button id="logout-button-mobile" class="btn btn-danger">Logout</button>
+        </header>
+
+        <!-- Left Side: Menu Items -->
+        <div class="menu-container">
+            <header class="desktop-header">
+                <h1 class="header-title">Campus Bites</h1>
+                <button id="logout-button-desktop" class="btn btn-danger">Logout</button>
+            </header>
+
+            <!-- Category Filters (Example) -->
+            <div class="filter-bar">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Burgers</button>
+                <button class="filter-btn">Drinks</button>
+                <button class="filter-btn">Sides</button>
+            </div>
+
+            <!-- Menu Grid -->
+            <div id="menu-grid" class="menu-grid">
+                <!-- Menu items will be dynamically inserted here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Right Side: Current Order / Bill -->
+        <div class="bill-container">
+            <!-- Order Header -->
+            <div class="bill-header">
+                <h2 class="bill-header-title">Current Order</h2>
+            </div>
+
+            <!-- Order Items List -->
+            <div id="order-items-list" class="bill-items">
+                <!-- Empty state -->
+                <p id="empty-cart-message" class="empty-cart-message">No items added yet.</p>
+                <!-- Order items will be dynamically inserted here -->
+            </div>
+
+            <!-- Order Summary & Checkout -->
+            <div class="bill-summary">
+                <div class="summary-details">
+                    <div class="summary-row">
+                        <span class="summary-row-label">Subtotal</span>
+                        <span id="subtotal-price" class="summary-row-value">₹0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-row-label">Tax (5%)</span>
+                        <span id="tax-price" class="summary-row-value">₹0.00</span>
+                    </div>
+                    <div class="summary-total">
+                        <span class="summary-total-label">Total</span>
+                        <span id="total-price" class="summary-total-value">₹0.00</span>
+                    </div>
+                </div>
+
+                <div class="summary-buttons">
+                    <button id="clear-order-btn" class="btn btn-danger-light">
+                        Clear Order
+                    </button>
+                    <button id="pay-now-btn" class="btn btn-success" disabled>
+                        Order Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal (Hidden by default) -->
+    <div id="payment-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Complete Payment</h3>
+                <button id="close-modal-btn" class="modal-close-btn">&times;</button>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="modal-total-display">
+                    <span class="modal-total-label">Total Due:</span>
+                    <span id="modal-total-due" class="modal-total-value">₹0.00</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="payment-method" class="form-label">Payment Method</label>
+                    <select id="payment-method" class="form-select">
+                        <option value="cash">Cash</option>
+                        <option value="card">Card</option>
+                        <option value="upi">UPI / QR</option>
+                    </select>
+                </div>
+
+                <div id="cash-payment-group" class="form-group">
+                    <label for="cash-received" class="form-label">Cash Received</label>
+                    <input type="number" id="cash-received" class="form-input" placeholder="e.g., 500">
+                </div>
+
+                <div id="change-due-group" class="form-group hidden">
+                    <span class="modal-total-label">Change Due:</span>
+                    <span id="change-due-amount" class="modal-total-value" style="color: #48bb78;">₹0.00</span>
+                </div>
+
+                <div class="form-group hidden" id="qrcode" title="payment QR">
+                    <canvas height="400" width="400" title="Payment QR"></canvas>
+                </div>
+                
+                <button id="finalize-payment-btn" class="btn btn-success" style="width: 100%;">
+                    Finalize Payment
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal (Hidden by default) -->
+    <div id="success-modal" class="modal-overlay hidden">
+        <div class="modal-content-success">
+            <!-- Simple Checkmark Icon -->
+            <svg class="success-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <h3 class="success-title">Payment Successful!</h3>
+            <p class="success-message">The order is finalized.</p>
+            <button id="new-order-btn" class="btn btn-primary" style="width: 100%;">
+                Start New Order
+            </button>
+        </div>
+    </div>
+
+
+    <script src="js/admin_panel.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/payment_qr_generator.js"></script>
+</body>
+</html>
+

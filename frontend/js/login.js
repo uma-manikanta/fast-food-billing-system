@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Redirect to the main billing page
                 // .replace() prevents user from clicking "back" to login
-                window.location.replace('billing.html');
+                window.location.replace('admin_panel.html');
 
             } else {
                 // FAILED
