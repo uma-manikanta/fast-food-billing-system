@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Calculate change
     cashReceivedInput.addEventListener('input', function () {
-        const total = currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0) * 1.05;
+        const total = Math.ceil(currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0) * 1.05);
         const received = Math.ceil(parseFloat(this.value));
 
         if (received > 0 && received >= total) {
