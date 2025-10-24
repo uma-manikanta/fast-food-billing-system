@@ -5,24 +5,12 @@ if (sessionStorage.getItem('isAdminLoggedIn') !== 'true') {
 }
 
 // --- APP LOGIC ---
-document.addEventListener('DOMContentLoaded', function () {
+// Make the main function async to use await for fetching data
+document.addEventListener('DOMContentLoaded', async function () { // <-- MODIFIED
 
     // --- 1. MOCK DATA ---
-    const menuItems = [
-        { id: 1, name: "Veg Burger", price: 80, category: "Burgers" },
-        { id: 2, name: "Chicken Burger", price: 120, category: "Burgers" },
-        { id: 3, name: "Cheese Burger", price: 100, category: "Burgers" },
-        { id: 4, name: "French Fries", price: 60, category: "Sides" },
-        { id: 5, name: "Veg Roll", price: 70, category: "Sides" },
-        { id: 6, name: "Cola", price: 30, category: "Drinks" },
-        { id: 7, name: "Iced Tea", price: 50, category: "Drinks" },
-        { id: 8, name: "Water Bottle", price: 20, category: "Drinks" },
-        { id: 9, name: "Veg Pizza", price: 150, category: "Burgers" },
-        { id: 10, name: "Chicken Pizza", price: 200, category: "Burgers" },
-        { id: 11, name: "Coffee", price: 40, category: "Drinks" },
-        { id: 12, name: "Veg Sandwich", price: 50, category: "Sides" },
-    ];
-
+    // const menuItems = [ ... ]; // <-- DELETED
+    let menuItems = []; // <-- ADDED: This will be filled from the database
     let currentOrder = []; // Array to hold order items
 
     // --- 2. GET HTML ELEMENTS ---
@@ -55,13 +43,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const logoutDesktop = document.getElementById('logout-button-desktop');
     const logoutMobile = document.getElementById('logout-button-mobile');
 
-    // --- 3. RENDER FUNCTIONS ---
 
-    // Function to render menu items
+    // --- NEW: FETCH MENU DATA FROM BACKEND ---
+    try {
+        // Use the full URL to your backend server (which is running on port 3000)
+        const response = await fetch('http://localhost:3000/api/menu'); 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        menuItems = await response.json(); // Load menu from database
+    } catch (error) {
+        console.error("Failed to fetch menu:", error);
+        alert("CRITICAL ERROR: Could not load menu items. Please check if the backend server is running.");
+        // Stop execution if menu can't be loaded
+        return; 
+    }
+    // --- END OF NEW FETCH ---
+
+
+    // --- 3. RENDER FUNCTIONS ---
+    // (renderMenu function is unchanged, it will now use the fetched menuItems)
     function renderMenu() {
         menuGrid.innerHTML = ""; // Clear existing items
         menuItems.forEach(item => {
-            // *** UPDATED to use new CSS classes ***
             const menuItemHTML = `
                         <div class="menu-item" data-id="${item.id}">
                             <div class="menu-item-content">
@@ -74,10 +78,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function filterFoodItems(itemName) {
+    // (filterFoodItems function is unchanged)
+    function filterFoodItems(itemName) { }
 
-    }
-    // Function to render the current order
+    // (renderOrder function is unchanged)
     function renderOrder() {
         orderList.innerHTML = ""; // Clear existing list
 
@@ -89,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function () {
             payNowBtn.disabled = false;
 
             currentOrder.forEach(item => {
-                // *** UPDATED to use new CSS classes ***
                 const orderItemHTML = `
                             <div class="order-item" data-id="${item.id}">
                                 <div class="order-item-details">
@@ -107,11 +110,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 orderList.innerHTML += orderItemHTML;
             });
         }
-
         updateTotals();
     }
 
-    // Function to calculate and update totals
+    // (updateTotals function is unchanged)
     function updateTotals() {
         const subtotal = currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const tax = Math.ceil(subtotal * 0.05); // 5% tax
@@ -124,37 +126,29 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- 4. EVENT HANDLERS ---
-
+    // (All handlers in this section are unchanged)
     // Add item to order
     menuGrid.addEventListener('click', function (e) {
-        const card = e.target.closest('.menu-item'); // *** UPDATED class ***
+        const card = e.target.closest('.menu-item'); 
         if (!card) return;
-
         const itemId = parseInt(card.dataset.id);
         const menuItem = menuItems.find(item => item.id === itemId);
-
-        // Check if item is already in order
         const existingItem = currentOrder.find(item => item.id === itemId);
-
         if (existingItem) {
             existingItem.quantity++;
         } else {
             currentOrder.push({ ...menuItem, quantity: 1 });
         }
-
         renderOrder();
     });
 
     // Change quantity or remove item
     orderList.addEventListener('click', function (e) {
-        if (!e.target.classList.contains('quantity-btn')) return; // *** UPDATED class ***
-
-        const itemElement = e.target.closest('.order-item'); // *** UPDATED class ***
+        if (!e.target.classList.contains('quantity-btn')) return;
+        const itemElement = e.target.closest('.order-item');
         const itemId = parseInt(itemElement.dataset.id);
         const action = e.target.dataset.action;
-
         const orderItem = currentOrder.find(item => item.id === itemId);
-
         if (action === 'increase') {
             orderItem.quantity++;
         } else if (action === 'decrease') {
@@ -163,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 currentOrder = currentOrder.filter(item => item.id !== itemId);
             }
         }
-
         renderOrder();
     });
 
@@ -183,15 +176,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // --- 5. MODAL LOGIC ---
-
+    // (payNowBtn, closeModalBtn, paymentMethodSelect, cashReceivedInput handlers are unchanged)
     // Open modal
     payNowBtn.addEventListener('click', function () {
         paymentModal.classList.remove('hidden');
-        // Reset modal form
         paymentMethodSelect.value = 'cash';
         cashPaymentGroup.classList.remove('hidden');
         cashReceivedInput.value = '';
-
         qrCode.classList.add('hidden')
         changeDueGroup.classList.add('hidden');
     });
@@ -206,14 +197,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (this.value === 'cash') {
             cashPaymentGroup.classList.remove('hidden');
             qrCode.classList.add('hidden')
-        } 
+        }
         else if (this.value == 'upi') {
             cashPaymentGroup.classList.add('hidden');
             changeDueGroup.classList.add('hidden');
             const totalAmount = Number(totalPriceEl.textContent.slice(1));
             console.log(totalAmount);
             generateUpiQrCode({
-                orderid:1,
+                orderid: 1,
                 amount: totalAmount
             });
             qrCode.classList.remove('hidden')
@@ -239,13 +230,58 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Finalize payment
-    finalizePaymentBtn.addEventListener('click', function () {
-        // In a real app, you'd save the order to a database here.
+    // Finalize payment --- MODIFIED TO SEND DATA TO BACKEND
+    // Make this function async to await the fetch call
+    finalizePaymentBtn.addEventListener('click', async function () { 
+        
+        // 1. Get all the data for the transaction
+        const subtotal = currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const tax = Math.ceil(subtotal * 0.05);
+        const total = subtotal + tax;
+        const paymentMode = paymentMethodSelect.value; // 'cash', 'upi', 'card'
 
-        // Hide payment modal, show success modal
-        paymentModal.classList.add('hidden');
-        successModal.classList.remove('hidden');
+        // 2. Create a unique Order ID (simple version)
+        const orderId = `TXN-${Date.now()}`;
+
+        // 3. Create the data payload to send to the server
+        const transactionData = {
+            order_id: orderId,
+            order_datetime: new Date().toISOString(), // Get current time in standard format
+            mode_of_payment: paymentMode,
+            subtotal: subtotal.toFixed(2),
+            tax_amount: tax.toFixed(2),
+            total_amount: total.toFixed(2),
+            food_items_ordered: currentOrder // Send the whole array of items
+        };
+
+        // 4. Send data to the backend
+        try {
+            const response = await fetch('http://localhost:3000/api/transactions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(transactionData)
+            });
+
+            if (!response.ok) {
+                // If server sends an error (e.g., 500), throw an error
+                throw new Error(`Server error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log("Transaction saved successfully:", result.order_id);
+
+            // 5. SUCCESS: Only show success modal after data is saved
+            paymentModal.classList.add('hidden');
+            successModal.classList.remove('hidden');
+
+        } catch (error) {
+            console.error("Error saving transaction:", error);
+            // Show an error to the user!
+            alert("Error: Could not save the order. Please try again. Check backend server.");
+            // DO NOT show success modal if it failed
+        }
     });
 
     // Start new order after success
@@ -257,6 +293,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // --- INITIALIZE APP ---
-    renderMenu();
+    renderMenu(); // Now renders data fetched from the DB
     renderOrder(); // To show empty cart message and disable button
 });
