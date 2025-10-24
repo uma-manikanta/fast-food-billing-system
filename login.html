@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Campus Bites</title>
+
+    <!-- CSS styles are now inside the HTML file -->
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+    <div class="login-content"> <!-- Fixed typo 'classs' to 'class' -->
+        <main class="login-main">
+            <h1>Campus Bites</h1>
+            <p class="subtitle">Login to make orders as admin</p>
+
+            <!-- The Form Itself -->
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="login-button">Login</button>
+                <p id="error-message"></p>
+            </form>
+        </main>
+    </div>
+
+    <script src="js/login.js"></script>
+</body>
+
+</html>

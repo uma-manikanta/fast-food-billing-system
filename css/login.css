@@ -1,0 +1,102 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    /* Light peach/cream background */
+    /* Added styles to center the form */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* This styles the login.html page */
+/* Removed .login-wrapper styles */
+
+/* This styles the content box */
+.login-content {
+    /* Removed flex-basis */
+    padding: 3rem;
+    box-sizing: border-box;
+    /* Removed flex styles */
+
+    /* Added card styles */
+    background-color: #fff;
+    border-radius: 12px;
+    /* box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); */
+    width: 100%;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.login-main {
+    /* Removed auto margins */
+    margin-bottom: auto;
+    max-width: 400px;
+}
+
+.login-main h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+/* Form Styling (for login.html) */
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #444;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+/* Button (for both pages) */
+.login-button {
+    background-color: #ff5733;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.9rem 2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    /* For the <a> tag on index.html */
+    display: inline-block;
+    /* For the <a> tag */
+}
+
+.login-button:hover {
+    background-color: #e64a19;
+}
+
+#error-message {
+    color: red;
+    margin-top: 1rem;
+    font-weight: bold;
+}
