@@ -1,8 +1,8 @@
 // --- SECURITY CHECK ---
 // If not logged in, redirect to login page
-// if (sessionStorage.getItem('isAdminLoggedIn') !== 'true') {
-//     window.location.replace('./login.html');
-// }
+if (sessionStorage.getItem('isAdminLoggedIn') !== 'true') {
+    window.location.replace('./login.html');
+}
 
 // --- APP LOGIC ---
 document.addEventListener('DOMContentLoaded', function () {
@@ -74,6 +74,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function filterFoodItems(itemName) {
+
+    }
     // Function to render the current order
     function renderOrder() {
         orderList.innerHTML = ""; // Clear existing list
@@ -111,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to calculate and update totals
     function updateTotals() {
         const subtotal = currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const tax = subtotal * 0.05; // 5% tax
+        const tax = Math.ceil(subtotal * 0.05); // 5% tax
         const total = subtotal + tax;
 
         subtotalPriceEl.textContent = `₹${subtotal.toFixed(2)}`;
@@ -225,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Calculate change
     cashReceivedInput.addEventListener('input', function () {
         const total = currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0) * 1.05;
-        const received = parseFloat(this.value);
+        const received = Math.ceil(parseFloat(this.value));
 
         if (received > 0 && received >= total) {
             const change = received - total;
