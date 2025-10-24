@@ -11,15 +11,30 @@ function generateUpiQrCode(order) {
     const upiUrl = `upi://pay?pa=${upiId}&pn=${payeeName}&am=${amount}&cu=INR&tr=${transactionId}&tn=${transactionNote}`;
 
     // Clear any existing QR code before generating a new one
-    document.getElementById("qrcode").innerHTML = "";
+    qrCodeElement = document.getElementById("qrcode");
+    qrCodeElement.innerHTML = "";
 
     // Generate the new QR code
-    new QRCode(document.getElementById("qrcode"), {
-        text: upiUrl,
-        width: 200,
-        height: 200,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H // High error correction level
+    const qr = new QRCodeStyling({
+            width: 300,
+            height: 300,
+            type: "svg", // Use 'svg' for a scalable, high-quality image
+            data: upiUrl,
+            image: "images/logo.jpg", // Replace with your logo URL
+            dotsOptions: {
+                color: "#fe5722",
+                type: "rounded"
+            },
+            backgroundOptions: {
+                color: "#ffffff",
+            },
+            imageOptions: {
+                crossOrigin: "anonymous",
+                margin: 5
+            }
     });
+
+    qr.append(qrCodeElement);
+
 }
+
