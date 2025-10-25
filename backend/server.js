@@ -12,12 +12,16 @@ const port = process.env.PORT || 3000;
 app.use(cors()); // Allow frontend to connect
 app.use(express.json()); // Allow server to read JSON payloads
 
-// --- 4. MySQL Database Connection ---
+// --- 4. MySQL Database Connection (UPDATED) ---
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
+    database: process.env.DB_DATABASE,
+    port: process.env.DB_PORT, // <-- ADD THIS LINE
+    ssl: {
+        rejectUnauthorized: false // <-- AND ADD THIS SSL OBJECT
+    }
 });
 
 db.connect((err) => {
@@ -29,6 +33,7 @@ db.connect((err) => {
 });
 
 // --- 5. API Endpoints (Routes) ---
+// (The rest of your file is unchanged and correct)
 
 /**
  * @route   GET /api/menu
@@ -68,7 +73,6 @@ app.post('/api/transactions', (req, res) => {
     }
     
     // 3. Convert the items array into a JSON string for the DB
-    // (MySQL 'JSON' or 'TEXT' field can store this string)
     const itemsJson = JSON.stringify(food_items_ordered);
 
     // 4. Create the SQL query
@@ -108,3 +112,4 @@ app.post('/api/transactions', (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+
