@@ -20,7 +20,7 @@ function generateUpiQrCode(order) {
             height: 300,
             type: "svg", // Use 'svg' for a scalable, high-quality image
             data: upiUrl,
-            image: "images/logo.jpg", // Replace with your logo URL
+            image: "images/logo.png", // Replace with your logo URL
             dotsOptions: {
                 color: "#fe5722",
                 type: "rounded"
