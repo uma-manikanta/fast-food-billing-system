@@ -7,11 +7,14 @@ const fs = require('fs'); // <-- ADD THIS
 const path = require('path'); // <-- ADD THIS
 
 // --- 2. Initialize Express App ---
+const corsOptions = {
+  origin: 'https://fast-food-billing-system.vercel.app'
+};
 const app = express();
 const port = process.env.PORT || 3000;
 
 // --- 3. Middleware ---
-app.use(cors()); // Allow frontend to connect
+app.use(cors(corsOptions)); // Allow frontend to connect
 app.use(express.json()); // Allow server to read JSON payloads
 
 // --- 4. MySQL Database Connection (FINAL UPDATE) ---
