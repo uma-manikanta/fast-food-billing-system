@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', async function () { // <-- MODIFIE
 
     // --- NEW: FETCH MENU DATA FROM BACKEND ---
     try {
-        // Use the full URL to your backend server (which is running on port 3000)
-        const response = await fetch('https://fast-food-billing-system.onrender.com/api/menu'); 
+        // <-- MODIFIED: URL changed back to localhost
+        const response = await fetch('http://localhost:3000/api/menu'); 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -256,7 +256,8 @@ document.addEventListener('DOMContentLoaded', async function () { // <-- MODIFIE
 
         // 4. Send data to the backend
         try {
-            const response = await fetch('https://fast-food-billing-system.onrender.com/api/transactions', {
+            // <-- MODIFIED: URL changed back to localhost
+            const response = await fetch('http://localhost:3000/api/transactions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

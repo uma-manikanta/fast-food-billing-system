@@ -21,12 +21,6 @@ const db = mysql.createConnection({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
     port: process.env.DB_PORT,
-    ssl: {
-        // Read the CA certificate file you just added
-        ca: fs.readFileSync(path.join(__dirname, 'ca.pem')),
-        // Now that we have the CA, we can securely verify the server
-        rejectUnauthorized: true 
-    }
 });
 
 db.connect((err) => {
