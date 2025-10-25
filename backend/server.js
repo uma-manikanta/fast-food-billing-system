@@ -3,6 +3,8 @@ const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
 require('dotenv').config(); // Load environment variables from .env file
+const fs = require('fs'); // <-- ADD THIS
+const path = require('path'); // <-- ADD THIS
 
 // --- 2. Initialize Express App ---
 const app = express();
@@ -12,15 +14,18 @@ const port = process.env.PORT || 3000;
 app.use(cors()); // Allow frontend to connect
 app.use(express.json()); // Allow server to read JSON payloads
 
-// --- 4. MySQL Database Connection (UPDATED) ---
+// --- 4. MySQL Database Connection (FINAL UPDATE) ---
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    port: process.env.DB_PORT, // <-- ADD THIS LINE
+    port: process.env.DB_PORT,
     ssl: {
-        rejectUnauthorized: false // <-- AND ADD THIS SSL OBJECT
+        // Read the CA certificate file you just added
+        ca: fs.readFileSync(path.join(__dirname, 'ca.pem')),
+        // Now that we have the CA, we can securely verify the server
+        rejectUnauthorized: true 
     }
 });
 
@@ -112,4 +117,3 @@ app.post('/api/transactions', (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-
