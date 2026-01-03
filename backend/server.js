@@ -69,10 +69,9 @@ app.get('/api/menu', (req, res) => {
  * @desc    Save a new transaction to the database
  */
 app.post('/api/transactions', (req, res) => {
-    // to get data from the frontend
     const {
         order_id,
-        order_datetime,
+        order_datetime, // Example: '2026-01-03T14:26:23.279Z'
         mode_of_payment,
         subtotal,
         tax_amount,
@@ -80,15 +79,18 @@ app.post('/api/transactions', (req, res) => {
         food_items_ordered
     } = req.body;
 
-    // validate data
+    // 1. Basic Validation
     if (!order_id || !total_amount || !food_items_ordered) {
         return res.status(400).json({ error: 'Missing required transaction data' });
     }
 
-    // convert the items array into a JSON string for the databse
+    // 2. FIX: Convert ISO date string to a JavaScript Date Object
+    // The mysql2 library will automatically format this correctly for the DB
+    const formattedDate = new Date(order_datetime);
+
+    // 3. Convert the items array into a JSON string for the database
     const itemsJson = JSON.stringify(food_items_ordered);
 
-    // to create the SQL query
     const query = `
         INSERT INTO transactions 
         (order_id, order_datetime, mode_of_payment, subtotal, tax_amount, total_amount, food_items_ordered) 
@@ -97,7 +99,7 @@ app.post('/api/transactions', (req, res) => {
 
     const values = [
         order_id,
-        order_datetime,
+        formattedDate, // Passed as an object
         mode_of_payment,
         subtotal,
         tax_amount,
@@ -105,14 +107,13 @@ app.post('/api/transactions', (req, res) => {
         itemsJson
     ];
 
-    // query execution
+    // 4. Execute the query using the pool
     db.query(query, values, (err, result) => {
         if (err) {
             console.error('Error saving transaction:', err);
-            return res.status(500).json({ error: 'Failed to save transaction' });
+            return res.status(500).json({ error: 'Failed to save transaction', details: err.message });
         }
 
-        // send success response
         res.status(201).json({
             success: true,
             message: 'Transaction saved successfully',
