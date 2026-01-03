@@ -36,12 +36,14 @@ const db = mysql.createPool({ // Use createPool instead of createConnection for 
 
 module.exports = db;
 
-db.connect((err) => {
+// Use this instead to verify the connection
+db.getConnection((err, connection) => {
     if (err) {
-        console.error('Error connecting to MySQL database:', err);
-        return;
+        console.error('Database connection failed:', err.message);
+    } else {
+        console.log('Connected to Aiven MySQL successfully!');
+        connection.release(); // Always release the connection back to the pool!
     }
-    console.log('Successfully connected to MySQL database.');
 });
 
 
